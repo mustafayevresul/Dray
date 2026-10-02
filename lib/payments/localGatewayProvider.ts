@@ -155,3 +155,6 @@ export async function createDriverConnectOnboardingLink(driverId: string, refres
 
   return link.url;
 }
+export const localGatewayProvider = {
+  // faylın mövcud məzmunu...
+};
