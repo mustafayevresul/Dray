@@ -1,0 +1,26 @@
+{
+  "name": "dray",
+  "private": true,
+  "description": "Dray — freight matching platform. Monorepo root: shared Prisma schema + lib/, npm workspaces for the two Next.js apps.",
+  "workspaces": [
+    "admin-web",
+    "load-owner-web"
+  ],
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate",
+    "dev:admin": "npm run dev --workspace=admin-web",
+    "dev:owner": "npm run dev --workspace=load-owner-web",
+    "build:admin": "npm run build --workspace=admin-web",
+    "build:owner": "npm run build --workspace=load-owner-web"
+  },
+  "devDependencies": {
+    "prisma": "^5.18.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.18.0"
+  }
+}

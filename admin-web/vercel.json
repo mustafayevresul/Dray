@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "prisma generate --schema=../prisma/schema.prisma && next build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "functions": {
+    "app/api/webhooks/stripe/route.ts": {
+      "maxDuration": 15
+    }
+  }
+}

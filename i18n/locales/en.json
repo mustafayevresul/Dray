@@ -1,0 +1,112 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "submit": "Submit",
+    "back": "Back",
+    "call": "Call",
+    "chat": "Chat",
+    "distanceKm": "{{value}} km away"
+  },
+  "auth": {
+    "phone": "Phone Number",
+    "login": "Log In",
+    "chooseLanguage": "Choose your language"
+  },
+  "driverRegistration": {
+    "title": "Driver Registration",
+    "subtitle": "We use this to verify your vehicle and match you with the right loads.",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "truckBrand": "Truck Brand",
+    "truckModel": "Truck Model",
+    "truckLength": "Truck Length (meters)",
+    "maxCapacity": "Max Load Capacity (tons)",
+    "licenseNumber": "Driver's License Number",
+    "plateNumber": "Vehicle Registration Plate",
+    "submitButton": "Submit for Verification",
+    "required": "Required",
+    "mustBeNumber": "Must be a number"
+  },
+  "driverHome": {
+    "liveBadge": "Live — finding loads near you",
+    "offersTitle": "Load Offers ({{count}})",
+    "noOffers": "No offers right now — you'll be notified the instant a nearby load matches your truck.",
+    "accept": "Accept",
+    "gettingLocation": "Getting your location…"
+  },
+  "activeTrip": {
+    "headingToPickup": "Heading to pickup",
+    "headingToPickupHelper": "Tap below once you've arrived and loading has started.",
+    "loadingCargo": "Loading cargo",
+    "loadingCargoHelper": "Tap below once the cargo is loaded and you're departing.",
+    "enRoute": "En route to drop-off",
+    "enRouteHelper": "Submit proof of delivery once you arrive.",
+    "delivered": "Delivered",
+    "deliveredHelper": "Waiting for the load owner to confirm and release payment.",
+    "completed": "Trip completed",
+    "completedHelper": "Payment released.",
+    "arrivedStartLoading": "Arrived — Start Loading",
+    "loadedDepart": "Loaded — Depart",
+    "waitingForOwner": "Waiting for owner confirmation…",
+    "yourPayout": "Your payout: {{amount}}"
+  },
+  "pod": {
+    "title": "Proof of Delivery",
+    "subtitle": "Take a clear photo of the delivered cargo. The load owner will confirm delivery to release your payment.",
+    "tapToTakePhoto": "Tap to take photo",
+    "notesPlaceholder": "Notes (optional) — e.g. left with warehouse manager",
+    "submitButton": "Submit Proof of Delivery",
+    "photoRequired": "Take a photo of the delivered cargo before submitting."
+  },
+  "loadForm": {
+    "title": "Post a Shipment",
+    "subtitle": "We'll automatically broadcast this to available drivers near your pickup point.",
+    "origin": "Origin",
+    "destination": "Destination",
+    "pickupAddress": "Pickup address",
+    "dropoffAddress": "Drop-off address",
+    "cargo": "Cargo",
+    "cargoType": "Cargo type (e.g. Refrigerated, Palletized goods)",
+    "weightTons": "Weight (tons)",
+    "requiredLength": "Required truck length (m, optional)",
+    "offeredRate": "Offered Freight Rate",
+    "publishButton": "Publish Load & Find Drivers",
+    "published": "Load published",
+    "broadcastResult": "Broadcast to {{count}} nearby drivers. We'll notify you the moment one accepts.",
+    "trackShipment": "Track this shipment"
+  },
+  "tracking": {
+    "title": "Shipment Tracking",
+    "statusSearching": "Searching for a driver…",
+    "statusAssigned": "Driver assigned — en route to pickup",
+    "statusLoading": "Driver is loading your cargo",
+    "statusInTransit": "In transit to destination",
+    "statusDelivered": "Delivered — awaiting your confirmation",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "pickup": "Pickup",
+    "dropoff": "Drop-off",
+    "driver": "Driver",
+    "lastSeen": "Last seen {{time}}",
+    "deliveredBanner": "Your driver has marked this load as delivered. Confirm to release payment.",
+    "confirmButton": "Confirm Delivery & Release Payment"
+  },
+  "chatScreen": {
+    "title": "Trip Chat",
+    "placeholder": "Type a message…",
+    "send": "Send",
+    "callDriver": "Call Driver",
+    "callOwner": "Call Load Owner"
+  },
+  "notifications": {
+    "newOfferTitle": "New load nearby",
+    "newOfferBody": "{{distance}} km away · {{price}}",
+    "tripInTransitTitle": "Your shipment is on its way",
+    "tripInTransitBody": "The driver has picked up your cargo and is en route.",
+    "tripDeliveredTitle": "Delivered — confirm to release payment",
+    "tripDeliveredBody": "Your driver marked this load as delivered."
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "Dray Driver",
+    "slug": "dray-driver",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#111827"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.dray.driver",
+      "infoPlist": {
+        "UIBackgroundModes": ["location"],
+        "NSLocationWhenInUseUsageDescription": "Dray uses your location to show nearby load offers.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Dray tracks your location in the background so nearby load owners can find you, even when the app isn't open. This is the core of how the platform matches you with loads.",
+        "NSCameraUsageDescription": "Dray uses your camera to capture proof of delivery photos."
+      }
+    },
+    "android": {
+      "package": "com.dray.driver",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#111827"
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "CAMERA"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Dray tracks your location in the background so nearby load owners can find you, even when the app isn't open."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Dray uses your camera to capture proof of delivery photos."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
+    }
+  }
+}

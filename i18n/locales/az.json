@@ -1,0 +1,112 @@
+{
+  "common": {
+    "loading": "Yüklənir…",
+    "retry": "Yenidən cəhd et",
+    "cancel": "Ləğv et",
+    "confirm": "Təsdiqlə",
+    "submit": "Göndər",
+    "back": "Geri",
+    "call": "Zəng et",
+    "chat": "Söhbət",
+    "distanceKm": "{{value}} km məsafədə"
+  },
+  "auth": {
+    "phone": "Telefon nömrəsi",
+    "login": "Daxil ol",
+    "chooseLanguage": "Dilinizi seçin"
+  },
+  "driverRegistration": {
+    "title": "Sürücü qeydiyyatı",
+    "subtitle": "Bunu nəqliyyat vasitənizi yoxlamaq və sizə uyğun yükləri tapmaq üçün istifadə edirik.",
+    "fullName": "Ad və soyad",
+    "phone": "Telefon nömrəsi",
+    "truckBrand": "Yük maşınının markası",
+    "truckModel": "Modeli",
+    "truckLength": "Yük maşınının uzunluğu (metr)",
+    "maxCapacity": "Maksimum yük tutumu (ton)",
+    "licenseNumber": "Sürücülük vəsiqəsinin nömrəsi",
+    "plateNumber": "Dövlət qeydiyyat nişanı",
+    "submitButton": "Yoxlama üçün göndər",
+    "required": "Vacibdir",
+    "mustBeNumber": "Rəqəm olmalıdır"
+  },
+  "driverHome": {
+    "liveBadge": "Canlı — yaxınlıqda yük axtarılır",
+    "offersTitle": "Yük təklifləri ({{count}})",
+    "noOffers": "Hazırda təklif yoxdur — yaxınlıqda maşınınıza uyğun yük tapılan kimi sizə bildiriş göndəriləcək.",
+    "accept": "Qəbul et",
+    "gettingLocation": "Məkanınız müəyyən edilir…"
+  },
+  "activeTrip": {
+    "headingToPickup": "Yükləmə yerinə gedilir",
+    "headingToPickupHelper": "Çatıb yükləməyə başladıqdan sonra aşağını basın.",
+    "loadingCargo": "Yük yüklənir",
+    "loadingCargoHelper": "Yük yükləndikdən və yola çıxmağa hazır olduqdan sonra aşağını basın.",
+    "enRoute": "Təhvil ünvanına doğru yolda",
+    "enRouteHelper": "Çatdıqdan sonra çatdırılma sübutunu təqdim edin.",
+    "delivered": "Çatdırıldı",
+    "deliveredHelper": "Yük sahibinin təsdiqi və ödənişin buraxılması gözlənilir.",
+    "completed": "Sifariş tamamlandı",
+    "completedHelper": "Ödəniş həyata keçirildi.",
+    "arrivedStartLoading": "Çatdım — Yükləməyə başla",
+    "loadedDepart": "Yükləndi — Yola çıx",
+    "waitingForOwner": "Yük sahibinin təsdiqi gözlənilir…",
+    "yourPayout": "Sizin qazancınız: {{amount}}"
+  },
+  "pod": {
+    "title": "Çatdırılma sübutu",
+    "subtitle": "Çatdırılan yükün aydın şəklini çəkin. Yük sahibi ödənişi buraxmaq üçün çatdırılmanı təsdiqləyəcək.",
+    "tapToTakePhoto": "Şəkil çəkmək üçün toxunun",
+    "notesPlaceholder": "Qeyd (istəyə bağlı) — məs. anbar müdirinə təhvil verildi",
+    "submitButton": "Çatdırılma sübutunu göndər",
+    "photoRequired": "Göndərmədən əvvəl çatdırılan yükün şəklini çəkin."
+  },
+  "loadForm": {
+    "title": "Yük elanı yerləşdir",
+    "subtitle": "Bu, yükləmə yerinizə yaxın olan mövcud sürücülərə avtomatik olaraq göndəriləcək.",
+    "origin": "Haradan",
+    "destination": "Hara",
+    "pickupAddress": "Yükləmə ünvanı",
+    "dropoffAddress": "Təhvil ünvanı",
+    "cargo": "Yük",
+    "cargoType": "Yükün növü (məs. Soyuducu, Paletli mallar)",
+    "weightTons": "Çəki (ton)",
+    "requiredLength": "Tələb olunan maşın uzunluğu (m, istəyə bağlı)",
+    "offeredRate": "Təklif olunan daşıma haqqı",
+    "publishButton": "Yerləşdir və sürücü tap",
+    "published": "Yük elanı yerləşdirildi",
+    "broadcastResult": "{{count}} yaxın sürücüyə göndərildi. Kimsə qəbul edən kimi sizə bildiriş göndəriləcək.",
+    "trackShipment": "Bu daşımanı izlə"
+  },
+  "tracking": {
+    "title": "Daşımanın izlənməsi",
+    "statusSearching": "Sürücü axtarılır…",
+    "statusAssigned": "Sürücü təyin edildi — yükləmə yerinə gəlir",
+    "statusLoading": "Sürücü yükünüzü yükləyir",
+    "statusInTransit": "Təhvil ünvanına doğru yoldadır",
+    "statusDelivered": "Çatdırıldı — sizin təsdiqiniz gözlənilir",
+    "statusCompleted": "Tamamlandı",
+    "statusCancelled": "Ləğv edildi",
+    "pickup": "Yükləmə",
+    "dropoff": "Təhvil",
+    "driver": "Sürücü",
+    "lastSeen": "Son görünmə: {{time}}",
+    "deliveredBanner": "Sürücünüz bu yükü çatdırılmış kimi qeyd etdi. Ödənişi buraxmaq üçün təsdiqləyin.",
+    "confirmButton": "Çatdırılmanı təsdiqlə və ödənişi buraxın"
+  },
+  "chatScreen": {
+    "title": "Sifariş söhbəti",
+    "placeholder": "Mesaj yazın…",
+    "send": "Göndər",
+    "callDriver": "Sürücüyə zəng et",
+    "callOwner": "Yük sahibinə zəng et"
+  },
+  "notifications": {
+    "newOfferTitle": "Yaxınlıqda yeni yük",
+    "newOfferBody": "{{distance}} km məsafədə · {{price}}",
+    "tripInTransitTitle": "Yükünüz yoldadır",
+    "tripInTransitBody": "Sürücü yükünüzü götürdü və yoldadır.",
+    "tripDeliveredTitle": "Çatdırıldı — ödənişi buraxmaq üçün təsdiqləyin",
+    "tripDeliveredBody": "Sürücünüz bu yükü çatdırılmış kimi qeyd etdi."
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "common": {
+    "loading": "Yükleniyor…",
+    "retry": "Tekrar dene",
+    "cancel": "İptal",
+    "confirm": "Onayla",
+    "submit": "Gönder",
+    "back": "Geri",
+    "call": "Ara",
+    "chat": "Sohbet",
+    "distanceKm": "{{value}} km uzaklıkta"
+  },
+  "auth": {
+    "phone": "Telefon Numarası",
+    "login": "Giriş Yap",
+    "chooseLanguage": "Dilinizi seçin"
+  },
+  "driverRegistration": {
+    "title": "Sürücü Kaydı",
+    "subtitle": "Bunu aracınızı doğrulamak ve sizi doğru yüklerle eşleştirmek için kullanıyoruz.",
+    "fullName": "Ad Soyad",
+    "phone": "Telefon Numarası",
+    "truckBrand": "Kamyon Markası",
+    "truckModel": "Modeli",
+    "truckLength": "Kamyon Uzunluğu (metre)",
+    "maxCapacity": "Maksimum Yük Kapasitesi (ton)",
+    "licenseNumber": "Sürücü Belgesi Numarası",
+    "plateNumber": "Araç Plakası",
+    "submitButton": "Onaya Gönder",
+    "required": "Zorunlu",
+    "mustBeNumber": "Sayı olmalıdır"
+  },
+  "driverHome": {
+    "liveBadge": "Canlı — yakınlarda yük aranıyor",
+    "offersTitle": "Yük Teklifleri ({{count}})",
+    "noOffers": "Şu anda teklif yok — kamyonunuza uygun bir yük bulunduğunda anında bildirim alacaksınız.",
+    "accept": "Kabul Et",
+    "gettingLocation": "Konumunuz alınıyor…"
+  },
+  "activeTrip": {
+    "headingToPickup": "Yükleme noktasına gidiliyor",
+    "headingToPickupHelper": "Vardığınızda ve yükleme başladığında aşağıya dokunun.",
+    "loadingCargo": "Yük yükleniyor",
+    "loadingCargoHelper": "Yük yüklendiğinde ve yola çıktığınızda aşağıya dokunun.",
+    "enRoute": "Teslimat noktasına gidiliyor",
+    "enRouteHelper": "Vardığınızda teslimat kanıtı gönderin.",
+    "delivered": "Teslim edildi",
+    "deliveredHelper": "Yük sahibinin onayı ve ödemenin serbest bırakılması bekleniyor.",
+    "completed": "Sefer tamamlandı",
+    "completedHelper": "Ödeme yapıldı.",
+    "arrivedStartLoading": "Vardım — Yüklemeye Başla",
+    "loadedDepart": "Yüklendi — Yola Çık",
+    "waitingForOwner": "Yük sahibinin onayı bekleniyor…",
+    "yourPayout": "Kazancınız: {{amount}}"
+  },
+  "pod": {
+    "title": "Teslimat Kanıtı",
+    "subtitle": "Teslim edilen yükün net bir fotoğrafını çekin. Yük sahibi, ödemeyi serbest bırakmak için teslimatı onaylayacak.",
+    "tapToTakePhoto": "Fotoğraf çekmek için dokunun",
+    "notesPlaceholder": "Not (isteğe bağlı) — örn. depo sorumlusuna teslim edildi",
+    "submitButton": "Teslimat Kanıtını Gönder",
+    "photoRequired": "Göndermeden önce teslim edilen yükün fotoğrafını çekin."
+  },
+  "loadForm": {
+    "title": "Yük İlanı Ver",
+    "subtitle": "Bu, yükleme noktanıza yakın uygun sürücülere otomatik olarak gönderilecek.",
+    "origin": "Nereden",
+    "destination": "Nereye",
+    "pickupAddress": "Yükleme adresi",
+    "dropoffAddress": "Teslimat adresi",
+    "cargo": "Yük",
+    "cargoType": "Yük tipi (örn. Soğutmalı, Paletli mallar)",
+    "weightTons": "Ağırlık (ton)",
+    "requiredLength": "Gerekli kamyon uzunluğu (m, isteğe bağlı)",
+    "offeredRate": "Teklif Edilen Nakliye Ücreti",
+    "publishButton": "Yayınla ve Sürücü Bul",
+    "published": "Yük yayınlandı",
+    "broadcastResult": "{{count}} yakın sürücüye gönderildi. Biri kabul eder etmez size bildirim gönderilecek.",
+    "trackShipment": "Bu sevkiyatı takip et"
+  },
+  "tracking": {
+    "title": "Sevkiyat Takibi",
+    "statusSearching": "Sürücü aranıyor…",
+    "statusAssigned": "Sürücü atandı — yükleme noktasına geliyor",
+    "statusLoading": "Sürücü yükünüzü yüklüyor",
+    "statusInTransit": "Teslimat noktasına doğru yolda",
+    "statusDelivered": "Teslim edildi — onayınız bekleniyor",
+    "statusCompleted": "Tamamlandı",
+    "statusCancelled": "İptal edildi",
+    "pickup": "Yükleme",
+    "dropoff": "Teslimat",
+    "driver": "Sürücü",
+    "lastSeen": "Son görülme: {{time}}",
+    "deliveredBanner": "Sürücünüz bu yükü teslim edilmiş olarak işaretledi. Ödemeyi serbest bırakmak için onaylayın.",
+    "confirmButton": "Teslimatı Onayla ve Ödemeyi Serbest Bırak"
+  },
+  "chatScreen": {
+    "title": "Sefer Sohbeti",
+    "placeholder": "Bir mesaj yazın…",
+    "send": "Gönder",
+    "callDriver": "Sürücüyü Ara",
+    "callOwner": "Yük Sahibini Ara"
+  },
+  "notifications": {
+    "newOfferTitle": "Yakınlarda yeni yük",
+    "newOfferBody": "{{distance}} km uzaklıkta · {{price}}",
+    "tripInTransitTitle": "Yükünüz yolda",
+    "tripInTransitBody": "Sürücü yükünüzü aldı ve yola çıktı.",
+    "tripDeliveredTitle": "Teslim edildi — ödemeyi serbest bırakmak için onaylayın",
+    "tripDeliveredBody": "Sürücünüz bu yükü teslim edilmiş olarak işaretledi."
+  }
+}

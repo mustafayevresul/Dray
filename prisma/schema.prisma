@@ -1,0 +1,390 @@
+// ============================================================
+// FREIGHT MATCHING PLATFORM — PHASE 1 SCHEMA
+// Admin Panel + Independent Driver Panel
+// Provider: PostgreSQL (works natively with Supabase)
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // pooled (pgbouncer, port 6543) — used at runtime by serverless functions
+  directUrl = env("DIRECT_URL")   // direct (port 5432) — used only by `prisma migrate`/`db push`, which pgbouncer can't run
+}
+
+// ------------------------------------------------------------
+// ENUMS
+// ------------------------------------------------------------
+
+enum UserRole {
+  ADMIN
+  DRIVER
+  LOAD_OWNER
+}
+
+enum DriverStatus {
+  PENDING_VERIFICATION // docs submitted, not yet approved
+  ACTIVE               // approved, can receive loads
+  SUSPENDED
+  REJECTED
+}
+
+// NOTE: There is intentionally NO "BUSY / EMPTY" manual enum.
+// Availability is a DERIVED, real-time value computed from:
+//   1. locationUpdatedAt (is the GPS ping fresh?)
+//   2. whether the driver has an ASSIGNED/LOADING/IN_TRANSIT trip open
+// See `driver.isAvailable` computed logic in lib/driverAvailability.ts
+
+// PHASE 2 — full trip lifecycle state machine.
+// Enforced centrally in lib/tripStateMachine.ts; no API route may write
+// `Trip.status` directly without passing through that validator.
+enum TripStatus {
+  SEARCHING     // Load posted, broadcasting to nearby FREE drivers, no driver assigned yet
+  ASSIGNED      // A driver accepted an offer; en route to pickup
+  LOADING       // Driver arrived, cargo is being loaded
+  IN_TRANSIT    // Cargo loaded, en route to drop-off
+  DELIVERED     // Driver submitted Proof of Delivery, awaiting load-owner confirmation
+  COMPLETED     // Load owner confirmed -> escrow released -> terminal state
+  CANCELLED
+}
+
+enum LoadStatus {
+  OPEN          // mirrors Trip.status = SEARCHING
+  IN_PROGRESS   // mirrors ASSIGNED / LOADING / IN_TRANSIT / DELIVERED
+  COMPLETED     // mirrors Trip.status = COMPLETED
+  CANCELLED
+}
+
+// Currency the Load Owner priced the shipment in. Commission and payouts
+// are always calculated and stored in the same currency as the trip.
+enum Currency {
+  USD
+  AZN
+}
+
+// One row per driver a load was broadcast to. This is the "Bolt/Uber-style"
+// dispatch fan-out: many PENDING offers go out at once, the first ACCEPT
+// wins and flips the Trip to ASSIGNED; all other offers are auto-EXPIRED.
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+}
+
+enum EscrowStatus {
+  HELD       // funds notionally held from the moment the trip is ASSIGNED
+  RELEASED   // load owner confirmed delivery -> driver paid, commission captured
+  REFUNDED   // trip cancelled after assignment
+}
+
+// PHASE 3 ------------------------------------------------------
+
+// Which payment rail settles this trip's escrow. AZN trips route to a
+// local gateway (Stripe does not support AZN); USD (or other
+// Stripe-supported currency) trips route to Stripe Connect — both sit
+// behind one shared PaymentProvider interface (lib/payments/index.ts).
+enum PaymentProviderType {
+  STRIPE_CONNECT
+  LOCAL_GATEWAY
+}
+
+enum ChatSenderRole {
+  DRIVER
+  LOAD_OWNER
+}
+
+// Supported UI languages. Azerbaijani is primary; ISO 639-1 codes used
+// throughout except Georgian, which is "ka" in ISO 639-1 (kept as `KA`
+// here to match the standard code rather than the "GE" country code,
+// which would collide with Germany's country code).
+enum Locale {
+  AZ
+  TR
+  RU
+  KA
+  EN
+}
+
+// ------------------------------------------------------------
+// CORE USER / AUTH
+// ------------------------------------------------------------
+
+model User {
+  id           String   @id @default(uuid())
+  // Supabase Auth's own user id (auth.users.id) — the JWT every API route
+  // now verifies resolves to this. Nullable only so existing rows created
+  // before Phase 5 don't break migration; every row created going forward
+  // always has one, set at registration time from the verified OTP session.
+  authUserId   String?  @unique
+  phone        String   @unique
+  email        String?  @unique
+  role         UserRole
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  driver     Driver?
+  loadOwner  LoadOwner?
+  adminMeta  AdminUser?
+
+  @@index([role])
+}
+
+model AdminUser {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+  name   String
+}
+
+// ------------------------------------------------------------
+// DRIVER (Independent Driver Panel)
+// ------------------------------------------------------------
+
+model Driver {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  fullName String
+  status   DriverStatus @default(PENDING_VERIFICATION)
+
+  // --- Registration Flow required fields ---
+  licenseNumber   String @unique
+  plateNumber     String @unique
+  truckBrand      String
+  truckModel      String
+  truckLengthM    Float  // meters
+  maxCapacityTons Float  // tonnage
+
+  // --- Live GPS (background-tracked, no manual status) ---
+  lastLat         Float?
+  lastLng         Float?
+  locationUpdatedAt DateTime?
+
+  // --- Commission / earnings ---
+  totalTrips      Int   @default(0)
+  totalEarningsCents Int @default(0) // net to driver, after commission
+
+  // --- Phase 3: i18n, push, payments ---
+  locale            Locale  @default(AZ)
+  expoPushToken     String? // Expo push token; routes through FCM (Android) / APNs (iOS)
+  stripeAccountId   String? // Stripe Connect Express account, for USD-payable drivers
+  stripeOnboarded   Boolean @default(false)
+  payoutBankDetails String? // opaque reference to local-gateway payout details (AZN drivers)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trips Trip[]
+  offers LoadOffer[]
+  proofsOfDelivery ProofOfDelivery[]
+  locationHistory DriverLocationPing[]
+  chatMessages ChatMessage[]
+
+  @@index([status])
+  @@index([lastLat, lastLng]) // naive geo index; see note on PostGIS below
+}
+
+// High-frequency GPS pings, written by the background location service.
+// Kept separate from `Driver` so we don't hammer the main row with writes
+// and can prune/aggregate history independently.
+model DriverLocationPing {
+  id        String   @id @default(uuid())
+  driver    Driver   @relation(fields: [driverId], references: [id])
+  driverId  String
+  lat       Float
+  lng       Float
+  heading   Float?
+  speedKph  Float?
+  recordedAt DateTime @default(now())
+
+  @@index([driverId, recordedAt])
+}
+
+// ------------------------------------------------------------
+// LOAD OWNER (shipper) — minimal stub for Phase 1, expands in Phase 2
+// ------------------------------------------------------------
+
+model LoadOwner {
+  id          String @id @default(uuid())
+  user        User   @relation(fields: [userId], references: [id])
+  userId      String @unique
+  companyName String?
+  fullName    String
+
+  // --- Phase 3 ---
+  locale           Locale  @default(AZ)
+  webPushToken     String? // browser push subscription reference (or Expo token if using a companion mobile app)
+  stripeCustomerId String? // Stripe customer, card on file for manual-capture charges
+
+  createdAt DateTime @default(now())
+  loads     Load[]
+  chatMessages ChatMessage[]
+}
+
+model Load {
+  id           String     @id @default(uuid())
+  owner        LoadOwner  @relation(fields: [ownerId], references: [id])
+  ownerId      String
+
+  pickupLat    Float
+  pickupLng    Float
+  pickupAddr   String
+  dropoffLat   Float
+  dropoffLng   Float
+  dropoffAddr  String
+
+  cargoType       String   // e.g. "Refrigerated", "Palletized goods", "Bulk grain"
+  cargoTons       Float
+  requiredLengthM Float?
+
+  // --- Offered Freight Rate ---
+  offeredRateCents Int      // stored in the smallest unit of `currency`
+  currency         Currency @default(USD)
+
+  status       LoadStatus @default(OPEN)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trip Trip?
+
+  @@index([status])
+  @@index([pickupLat, pickupLng])
+}
+
+// ------------------------------------------------------------
+// TRIP / MATCH — the object that generates platform revenue
+// ------------------------------------------------------------
+
+model Trip {
+  id       String   @id @default(uuid())
+  load     Load     @relation(fields: [loadId], references: [id])
+  loadId   String   @unique
+
+  // Nullable: a Trip exists (in SEARCHING) before any driver is assigned.
+  driver   Driver?  @relation(fields: [driverId], references: [id])
+  driverId String?
+
+  status TripStatus @default(SEARCHING)
+
+  // Snapshotted in the load's own currency at creation time, never
+  // recalculated later even if the platform commission rate changes.
+  currency          Currency
+  freightPriceCents Int
+  commissionPct     Float
+  commissionCents   Int
+  driverPayoutCents Int
+
+  // --- Full lifecycle timestamps: one per state transition ---
+  searchingStartedAt DateTime  @default(now())
+  assignedAt         DateTime?
+  loadingStartedAt   DateTime?
+  transitStartedAt   DateTime?
+  deliveredAt        DateTime?
+  completedAt        DateTime?
+  cancelledAt        DateTime?
+
+  offers          LoadOffer[]
+  proofOfDelivery ProofOfDelivery?
+  escrow          EscrowTransaction?
+  messages        ChatMessage[]
+
+  @@index([status])
+  @@index([driverId, status])
+}
+
+// PHASE 3 — real-time chat between the assigned driver and load owner,
+// scoped to one trip. Rows are inserted via the messages API route
+// (admin-web/app/api/trips/[tripId]/messages); the actual "real-time"
+// delivery is Supabase Realtime's built-in Postgres change-stream on this
+// table, subscribed to directly from each client — see
+// driver-app/services/chat.ts and load-owner-web/lib/chat.ts. No separate
+// message broker or backend realtime service needed.
+model ChatMessage {
+  id       String         @id @default(uuid())
+  trip     Trip           @relation(fields: [tripId], references: [id])
+  tripId   String
+  senderRole ChatSenderRole
+
+  // Exactly one of these is set, matching senderRole — enforced in
+  // lib/chat.ts rather than at the DB level (Prisma has no CHECK constraint
+  // helper), since only one role sends per row.
+  driver   Driver?    @relation(fields: [driverId], references: [id])
+  driverId String?
+  owner    LoadOwner? @relation(fields: [ownerId], references: [id])
+  ownerId  String?
+
+  body     String
+  sentAt   DateTime @default(now())
+  readAt   DateTime?
+
+  @@index([tripId, sentAt])
+}
+
+// Fan-out dispatch record: one row per driver a SEARCHING trip was
+// broadcast to. lib/matching.ts creates these; lib/tripStateMachine.ts
+// (via the accept-offer route) resolves the race between drivers.
+model LoadOffer {
+  id       String @id @default(uuid())
+  trip     Trip   @relation(fields: [tripId], references: [id])
+  tripId   String
+  driver   Driver @relation(fields: [driverId], references: [id])
+  driverId String
+
+  status      OfferStatus @default(PENDING)
+  distanceKm  Float       // snapshot at broadcast time, for driver-side sorting
+  broadcastAt DateTime    @default(now())
+  respondedAt DateTime?
+  expiresAt   DateTime    // offers auto-expire so a silent driver doesn't block matching
+
+  @@index([driverId, status])
+  @@index([tripId, status])
+}
+
+model ProofOfDelivery {
+  id       String @id @default(uuid())
+  trip     Trip   @relation(fields: [tripId], references: [id])
+  tripId   String @unique
+  driver   Driver @relation(fields: [driverId], references: [id])
+  driverId String
+
+  photoUrl   String
+  notes      String?
+  uploadedAt DateTime @default(now())
+}
+
+// Created the moment a Trip becomes ASSIGNED (funds notionally reserved),
+// and resolved by lib/escrow.ts once the load owner confirms delivery.
+model EscrowTransaction {
+  id     String @id @default(uuid())
+  trip   Trip   @relation(fields: [tripId], references: [id])
+  tripId String @unique
+
+  status                EscrowStatus @default(HELD)
+  heldAmountCents       Int          // full freight price, held at ASSIGNED
+  commissionCapturedCents Int?       // set only on RELEASED
+  driverPayoutCents     Int?         // set only on RELEASED
+
+  // --- Phase 3: real payment rail wiring ---
+  provider              PaymentProviderType
+  providerIntentId      String?  // Stripe PaymentIntent id, or local-gateway transaction ref
+  providerTransferId    String?  // Stripe Transfer id to the driver's connected account (set on RELEASED)
+  providerRefundId      String?  // set on REFUNDED
+
+  createdAt  DateTime  @default(now())
+  releasedAt DateTime?
+}
+
+// ------------------------------------------------------------
+// PLATFORM CONFIG — lets Admin tune the commission without a deploy
+// ------------------------------------------------------------
+
+model PlatformConfig {
+  id            String @id @default("singleton")
+  commissionPct Float  @default(0.07) // 7% default, admin can move between 6-8%
+  updatedAt     DateTime @updatedAt
+}
